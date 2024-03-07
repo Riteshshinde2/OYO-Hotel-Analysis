@@ -1,0 +1,58 @@
+select * from [dbo].[OYO_HOTEL_ROOMS] 
+---------------------------------------------------------------------------------------------------------------------------
+--Total Hotels
+	select
+		count(*) as Total_Hotel
+			from [dbo].[OYO_HOTEL_ROOMS]
+---------------------------------------------------------------------------------------------------------------------------
+--select top 10 hotels with highest ratings
+select top 10
+	[Hotel_Name],[Rating] 
+		from [dbo].[OYO_HOTEL_ROOMS]
+			order by Rating desc
+      ------------------------------
+select top 10
+	[Hotel_Name],AVG([Rating]) as Top_Hotel
+		from [dbo].[OYO_HOTEL_ROOMS]
+			group by [Hotel_Name],[Rating]
+				order by Rating desc
+---------------------------------------------------------------------------------------------------------------------------
+--Determine hotels per city
+	select [Place] ,COUNT(*) as Total_Hotel
+		from [dbo].[OYO_HOTEL_ROOMS]
+			group by Place
+				order by Total_Hotel desc
+-------------------------------------------------------------------------------------
+--determine the percentage of oyo hotels that have air conditioning
+	select
+		(count(*)*100.0)/(select count (*) from [dbo].[OYO_HOTEL_ROOMS] ) as AC_Presence_Yes
+			from [dbo].[OYO_HOTEL_ROOMS]
+				where [Air Conditioning]='YES'
+	select
+		(count(*)*100.0)/(select count (*) from [dbo].[OYO_HOTEL_ROOMS] ) as AC_Presence_No
+			from [dbo].[OYO_HOTEL_ROOMS]
+				where [Air Conditioning]='NO'
+---------------------------------------------------------------------------------------------------------------------------
+--calculate the  average price of oyo in each city with population
+	select [Place] ,[Population] , avg([Price]) as Average_Price
+		from [dbo].[OYO_HOTEL_ROOMS]
+			group by [Place],Population
+				order by Average_Price desc
+---------------------------------------------------------------------------------------------------------------------------
+--find oyo hotel that has minimum stay greater than avg minimum stay
+	select  [Place] ,[Minimum_Stay]
+		from [dbo].[OYO_HOTEL_ROOMS]
+			where [Minimum_Stay]>(select avg([Minimum_Stay]) from [dbo].[OYO_HOTEL_ROOMS])
+---------------------------------------------------------------------------------------------------------------------------
+--select top 5 Hotel that gives minimum discount
+	select
+		top 5 [Hotel_Name],[Price],[Discount],[Place]
+			from [dbo].[OYO_HOTEL_ROOMS]
+				group by [Hotel_Name],[Price],[Discount],[Place]
+					order by [Discount]
+
+---------------------------------------------------------------------------------------------------------------------------
+select [Minimum_Stay],count([Minimum_Stay]) as days_Spent
+	from [dbo].[OYO_HOTEL_ROOMS]
+		group by [Minimum_Stay]
+			order by days_Spent desc
